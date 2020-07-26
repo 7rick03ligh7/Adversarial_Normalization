@@ -1,4 +1,3 @@
-import torch
 import torch.nn as nn
 
 class BN_LN_IN_VGGLike(nn.Module):

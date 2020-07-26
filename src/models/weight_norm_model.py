@@ -1,4 +1,3 @@
-import torch
 import torch.nn as nn
 
 class WN_VGGLike(nn.Module):
