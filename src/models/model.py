@@ -6,7 +6,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import DataLoader
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -21,12 +21,12 @@ from BN_LN_IN import BN_LN_IN_VGGLike
 from WN import WN_VGGLike
 
 
-def conv2dWeightInit(x):
+def conv2d_weight_init(x):
     if isinstance(x, nn.Conv2d):
         torch.nn.init.xavier_normal_(x.weight)
         torch.nn.init.zeros_(x.bias)
 
-def linearWeightInit(x):
+def linear_weight_init(x):
     if isinstance(x, nn.Linear):
         torch.nn.init.xavier_normal_(x.weight)
         torch.nn.init.zeros_(x.bias)
@@ -49,10 +49,14 @@ class VGGLike(pl.LightningModule):
 
         self.targets = []
         self.predicts = []
-        self.confusion_matrix = torch.zeros(self.model_params['classes_nb'],
-                                            self.model_params['classes_nb'], dtype=int)
-        self.confusion_matrix_norm = torch.zeros(self.model_params['classes_nb'],
-                                            self.model_params['classes_nb'], dtype=int)
+        self.confusion_matrix = torch.zeros(
+            self.model_params['classes_nb'],
+            self.model_params['classes_nb'], dtype=int
+            )
+        self.confusion_matrix_norm = torch.zeros(
+            self.model_params['classes_nb'],
+            self.model_params['classes_nb'], dtype=int
+            )
         self.logpath = logpath
         self.vis_dir = 'conf_matrix'
         self.ckpt_every_dir = 'every'
@@ -70,19 +74,19 @@ class VGGLike(pl.LightningModule):
 
     def configure_model(self):
         if self.model_params['regulz_type'] in (
-            'BatchNorm', 
-            'LayerNorm', 
-            'SpLayerNorm', 
-            'InstanceNorm', 
+            'BatchNorm',
+            'LayerNorm',
+            'SpLayerNorm',
+            'InstanceNorm',
             'None'
             ):
             self.model = BN_LN_IN_VGGLike(self.model_params)
-        if self.model_params['regulz_type'] in ('WeightNorm'):
+        if self.model_params['regulz_type'] == 'WeightNorm':
             self.model = WN_VGGLike(self.model_params)
 
         self.setSeeds()
-        self.model.apply(conv2dWeightInit)
-        self.model.apply(linearWeightInit)
+        self.model.apply(conv2d_weight_init)
+        self.model.apply(linear_weight_init)
 
     def forward(self, x):
         return self.model(x)
@@ -90,8 +94,8 @@ class VGGLike(pl.LightningModule):
     @pl.data_loader
     def train_dataloader(self):
         train_data = torchvision.datasets.CIFAR10(
-            './data', 
-            train=True, 
+            './data',
+            train=True,
             transform=self.transform, 
             download=False
             )
@@ -139,14 +143,24 @@ class VGGLike(pl.LightningModule):
     def visualize_confustion_matrix(self, normalize=True):
         if normalize:
             self.confusion_matrix_norm = self.confusion_matrix/self.confusion_matrix.sum(dim=1)
-        fig, ax = plt.subplots(figsize=(8,6), dpi=200)
-        sns.heatmap(self.confusion_matrix_norm, ax=ax, cmap='Blues', vmin=0, vmax=1, annot=self.confusion_matrix.int(), fmt='d')
+        fig, ax = plt.subplots(figsize=(8, 6), dpi=200)
+        sns.heatmap(
+            self.confusion_matrix_norm,
+            ax=ax, cmap='Blues',
+            vmin=0,
+            vmax=1,
+            annot=self.confusion_matrix.int(),
+            fmt='d'
+            )
         ax.set_xlabel('PREDICTED', fontsize=14)
         ax.set_ylabel('GROUND TRUTH', fontsize=14)
         ax.set_title(f'Epoch_{self.trainer.current_epoch}', fontsize=14)
         ax.set_xticklabels(self.model_params['classes'], rotation=65, fontsize=12)
         ax.set_yticklabels(self.model_params['classes'], rotation=0, fontsize=12)
-        fig.savefig(self.logpath+'/'+self.vis_dir+f'/epoch_{self.trainer.current_epoch}.png', bbox_inches="tight")
+        fig.savefig(
+            self.logpath+'/'+self.vis_dir+f'/epoch_{self.trainer.current_epoch}.png',
+            bbox_inches="tight"
+            )
         plt.close('all')
 
     def save_model(self):
