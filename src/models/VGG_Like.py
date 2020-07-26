@@ -74,11 +74,11 @@ class VGGLike(pl.LightningModule):
 
     def configure_model(self):
         if self.model_params['regulz_type'] in (
-            'BatchNorm',
-            'LayerNorm',
-            'SpLayerNorm',
-            'InstanceNorm',
-            'None'
+                'BatchNorm',
+                'LayerNorm',
+                'SpLayerNorm',
+                'InstanceNorm',
+                'None'
             ):
             self.model = BN_LN_IN_VGGLike(self.model_params)
         if self.model_params['regulz_type'] == 'WeightNorm':
