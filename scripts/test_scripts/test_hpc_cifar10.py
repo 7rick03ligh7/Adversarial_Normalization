@@ -95,12 +95,13 @@ class PL_Model(pl.LightningModule):
 
 def worker(pid, queue):
     model = PL_Model(pid, queue)
-    tb_logger = pl_loggers.TensorBoardLogger('logs_test', name='test'+str(pid), version='')
+    tb_logger = pl_loggers.TensorBoardLogger('./logs_test', name='test'+str(pid), version='')
     trainer = Trainer(
         logger=tb_logger,
         max_epochs=10, 
         num_sanity_val_steps=0, 
         weights_summary=None,
+        weights_save_path='./logs_test',
         progress_bar_refresh_rate=0,
         gpus=1
         )
