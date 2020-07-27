@@ -32,7 +32,7 @@ def linear_weight_init(x):
         torch.nn.init.zeros_(x.bias)
 
 class VGGLike(pl.LightningModule):
-    def __init__(self, model_params, logpath='.', seed=42):
+    def __init__(self, model_params):
         super().__init__()
         self.history = {
             'train_loss': [],
@@ -40,7 +40,7 @@ class VGGLike(pl.LightningModule):
             'val': {'loss':[], 'acc':[]}
         }
 
-        self.seed = seed
+        self.seed = model_params['seed']
         self.model_params = model_params
         self.model = None
         self.configure_model()
@@ -57,7 +57,7 @@ class VGGLike(pl.LightningModule):
             self.model_params['classes_nb'],
             self.model_params['classes_nb'], dtype=int
             )
-        self.logpath = logpath
+        self.logpath = model_params['logpath']
         self.vis_dir = 'conf_matrix'
         self.ckpt_every_dir = 'every'
 
