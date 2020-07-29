@@ -69,7 +69,7 @@ def main_parallel(models_params):
 
 def main_debug(model_params):
     model_params = models_params[0]
-    model = VGGLike(model_params)
+    model = VGGLike(model_params, mp.Queue())
     tb_logger = pl_loggers.TensorBoardLogger(
         model_params['logdir'],
         name=model_params['logname'],
