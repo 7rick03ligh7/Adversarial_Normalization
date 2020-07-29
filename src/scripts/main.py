@@ -23,7 +23,7 @@ def worker(pid, queue, model_params):
     #     shutil.rmtree(model_params['logpath'])
     # os.makedirs(model_params['logpath'], exist_ok=True)
 
-    model = VGGLike(model_params)
+    model = VGGLike(model_params, queue)
     tb_logger = pl_loggers.TensorBoardLogger(
         model_params['logdir'],
         name=model_params['logname'],
@@ -41,7 +41,7 @@ def worker(pid, queue, model_params):
     trainer = Trainer(
         logger=tb_logger,
         checkpoint_callback=checkpoint_callback,
-        max_epochs=100,
+        max_epochs=model_params['epochs'],
         num_sanity_val_steps=0,
         weights_summary=None,
         progress_bar_refresh_rate=0,
@@ -87,7 +87,7 @@ def main_debug(model_params):
     trainer = Trainer(
         logger=tb_logger,
         checkpoint_callback=checkpoint_callback,
-        max_epochs=100,
+        max_epochs=model_params['epochs'],
         num_sanity_val_steps=0,
         weights_summary=None,
         progress_bar_refresh_rate=0,
