@@ -1,6 +1,6 @@
 [
     {
-        "filters": [2,3,4,5,6,7],
+        "filters": [4, 6, 10, 14, 22, 30],
         "pool_positions": [2, 5],
         "regulz_type": "None",
         "pool_factor": 2,
@@ -11,7 +11,7 @@
         "batch_size": 256
     },
     {
-        "filters": [3,4,5,6,7,8],
+        "filters": [6, 9, 15, 21, 33, 45],
         "pool_positions": [2, 5],
         "regulz_type": "None",
         "pool_factor": 2,
@@ -22,7 +22,7 @@
         "batch_size": 256
     },
     {
-        "filters": [4,5,6,7,8,9],
+        "filters": [8, 12, 20, 28, 44, 60],
         "pool_positions": [2, 5],
         "regulz_type": "None",
         "pool_factor": 2,
@@ -33,7 +33,51 @@
         "batch_size": 256
     },
     {
-        "filters": [5,6,7,8,9,10],
+        "filters": [10, 15, 25, 35, 55, 75],
+        "pool_positions": [2, 5],
+        "regulz_type": "None",
+        "pool_factor": 2,
+        "classes_nb": 10,
+        "input_shape": [3, 32, 32],
+        "weight_decay": 0.005,
+        "elu_alpha": 1,
+        "batch_size": 256
+    },
+    {
+        "filters": [12, 18, 30, 42, 66, 90],
+        "pool_positions": [2, 5],
+        "regulz_type": "None",
+        "pool_factor": 2,
+        "classes_nb": 10,
+        "input_shape": [3, 32, 32],
+        "weight_decay": 0.005,
+        "elu_alpha": 1,
+        "batch_size": 256
+    },
+    {
+        "filters": [14, 21, 35, 49, 77, 105],
+        "pool_positions": [2, 5],
+        "regulz_type": "None",
+        "pool_factor": 2,
+        "classes_nb": 10,
+        "input_shape": [3, 32, 32],
+        "weight_decay": 0.005,
+        "elu_alpha": 1,
+        "batch_size": 256
+    },
+    {
+        "filters": [16, 24, 40, 56, 88, 120],
+        "pool_positions": [2, 5],
+        "regulz_type": "None",
+        "pool_factor": 2,
+        "classes_nb": 10,
+        "input_shape": [3, 32, 32],
+        "weight_decay": 0.005,
+        "elu_alpha": 1,
+        "batch_size": 256
+    },
+    {
+        "filters": [18, 27, 45, 63, 99, 135],
         "pool_positions": [2, 5],
         "regulz_type": "None",
         "pool_factor": 2,
