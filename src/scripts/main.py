@@ -96,19 +96,18 @@ def main_debug(model_params):
         weights_summary=None,
         progress_bar_refresh_rate=0,
         track_grad_norm=1,
-        gpus=[os.environ['CUDA_VISIBLE_DEVICES']]
+        gpus=1
         )
     trainer.fit(model)
 
 
 if __name__ == '__main__':
-    mp.set_start_method('spawn')
+    # mp.set_start_method('spawn')
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--logdir', type=str, required=True)
     parser.add_argument('--params_file', type=str, required=True)
     parser.add_argument('--epochs', type=int, required=True)
-    parser.add_argument('--seed', type=int, default=42, required=False)
     parser.add_argument('-debug', type=bool, default=False, const=True, nargs='?')
     arguments = parser.parse_args()
 
@@ -133,7 +132,6 @@ if __name__ == '__main__':
         model_params['logdir'] = arguments.logdir
         model_params['logname'] = logname
         model_params['logpath'] = logpath
-        model_params['seed'] = arguments.seed
         model_params['epochs'] = arguments.epochs
 
     if arguments.debug:
@@ -143,3 +141,4 @@ if __name__ == '__main__':
         print('PARALLLLLEEEEEEEEEEEEEEL!!!!!!')
         main_parallel(models_params)
 
+    print('========= Done!!! =========')

@@ -20,7 +20,7 @@ class BN_LN_IN_VGGLike(nn.Module):
                     stride=(1, 1)
                     )
                 )
-
+            current_hw -= 2
             if model_params['regulz_type'] == 'BatchNorm':
                 self.conv.add_module(f'bn_{block_idx}', nn.BatchNorm2d(filt_size))
             if model_params['regulz_type'] == 'LayerNorm':

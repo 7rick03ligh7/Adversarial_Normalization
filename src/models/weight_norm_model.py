@@ -6,7 +6,6 @@ class WN_VGGLike(nn.Module):
 
         pool_idx = 0
         block_idx = 0
-        current_hw = 32
         self.conv = nn.Sequential()
         prev_filt_size = model_params['input_shape'][0]
         for filt_size in model_params['filters']:
@@ -17,7 +16,7 @@ class WN_VGGLike(nn.Module):
                         prev_filt_size,
                         filt_size,
                         kernel_size=(3, 3),
-                        padding=(1, 1),
+                        padding=(0, 0),
                         stride=(1, 1)
                         )
                     )
@@ -32,19 +31,20 @@ class WN_VGGLike(nn.Module):
                         )
                     pool_idx += 1
                     block_idx += 1
-                    current_hw *= 1/2
-                    current_hw = int(current_hw)
             prev_filt_size = filt_size
 
-        head_size = current_hw**2 * model_params['filters'][-1]
         self.head = nn.Sequential()
         self.head.add_module(
             'lin',
-            nn.utils.weight_norm(nn.Linear(head_size, head_size))
+            nn.utils.weight_norm(nn.Linear(model_params['filters'][-1], model_params['filters'][-1]))
+            )
+        self.head.add_module(
+            'lin_elu',
+            nn.ELU(model_params['elu_alpha'])
             )
         self.head.add_module(
             'clf',
-            nn.utils.weight_norm(nn.Linear(head_size, model_params['classes_nb']))
+            nn.utils.weight_norm(nn.Linear(model_params['filters'][-1], model_params['classes_nb']))
             )
 
     def forward(self, x):

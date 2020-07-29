@@ -1,90 +1,86 @@
 [
     {
-        "filters": [4, 6, 10, 14, 22, 30],
+        "filters": [32, 48, 80, 112, 176, 240],
         "pool_positions": [2, 5],
-        "regulz_type": "None",
+        "regulz_type": "BatchNorm",
         "pool_factor": 2,
         "classes_nb": 10,
         "input_shape": [3, 32, 32],
         "weight_decay": 0.005,
         "elu_alpha": 1,
-        "batch_size": 256
+        "batch_size": 128,
+        "seed": 42
     },
     {
-        "filters": [6, 9, 15, 21, 33, 45],
+        "filters": [32, 48, 80, 112, 176, 240],
         "pool_positions": [2, 5],
-        "regulz_type": "None",
+        "regulz_type": "BatchNorm",
         "pool_factor": 2,
         "classes_nb": 10,
         "input_shape": [3, 32, 32],
         "weight_decay": 0.005,
         "elu_alpha": 1,
-        "batch_size": 256
+        "batch_size": 64,
+        "seed": 42
     },
     {
-        "filters": [8, 12, 20, 28, 44, 60],
+        "filters": [32, 48, 80, 112, 176, 240],
         "pool_positions": [2, 5],
-        "regulz_type": "None",
+        "regulz_type": "BatchNorm",
         "pool_factor": 2,
         "classes_nb": 10,
         "input_shape": [3, 32, 32],
         "weight_decay": 0.005,
         "elu_alpha": 1,
-        "batch_size": 256
+        "batch_size": 192,
+        "seed": 42
     },
     {
-        "filters": [10, 15, 25, 35, 55, 75],
+        "filters": [32, 48, 80, 112, 176, 240],
         "pool_positions": [2, 5],
-        "regulz_type": "None",
+        "regulz_type": "LayerNorm",
         "pool_factor": 2,
         "classes_nb": 10,
         "input_shape": [3, 32, 32],
         "weight_decay": 0.005,
         "elu_alpha": 1,
-        "batch_size": 256
+        "batch_size": 128,
+        "seed": 42
     },
     {
-        "filters": [12, 18, 30, 42, 66, 90],
+        "filters": [32, 48, 80, 112, 176, 240],
         "pool_positions": [2, 5],
-        "regulz_type": "None",
+        "regulz_type": "SpLayerNorm",
         "pool_factor": 2,
         "classes_nb": 10,
         "input_shape": [3, 32, 32],
         "weight_decay": 0.005,
         "elu_alpha": 1,
-        "batch_size": 256
+        "batch_size": 128,
+        "seed": 42
     },
     {
-        "filters": [14, 21, 35, 49, 77, 105],
+        "filters": [32, 48, 80, 112, 176, 240],
         "pool_positions": [2, 5],
-        "regulz_type": "None",
+        "regulz_type": "WeightNorm",
         "pool_factor": 2,
         "classes_nb": 10,
         "input_shape": [3, 32, 32],
         "weight_decay": 0.005,
         "elu_alpha": 1,
-        "batch_size": 256
+        "batch_size": 128,
+        "seed": 42
     },
     {
-        "filters": [16, 24, 40, 56, 88, 120],
+        "filters": [32, 48, 80, 112, 176, 240],
         "pool_positions": [2, 5],
-        "regulz_type": "None",
+        "regulz_type": "InstanceNorm",
         "pool_factor": 2,
         "classes_nb": 10,
         "input_shape": [3, 32, 32],
         "weight_decay": 0.005,
         "elu_alpha": 1,
-        "batch_size": 256
-    },
-    {
-        "filters": [18, 27, 45, 63, 99, 135],
-        "pool_positions": [2, 5],
-        "regulz_type": "None",
-        "pool_factor": 2,
-        "classes_nb": 10,
-        "input_shape": [3, 32, 32],
-        "weight_decay": 0.005,
-        "elu_alpha": 1,
-        "batch_size": 256
+        "batch_size": 128,
+        "seed": 42
     }
 ]
