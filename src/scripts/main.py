@@ -50,6 +50,10 @@ def worker(pid, queue, model_params):
         )
     trainer.fit(model)
 
+    pd.DataFrame(model.history['train_loss'], columns=['train_loss']).to_csv(model_params['logpath']+'/train_loss.csv', index=False)
+    pd.DataFrame(model.history['train']).to_csv(model_params['logpath']+'/train.csv', index=False)
+    pd.DataFrame(model.history['val']).to_csv(model_params['logpath']+'/val.csv', index=False)
+
 def main_parallel(models_params):
     progress_bars = []
     processes = []
