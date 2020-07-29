@@ -23,7 +23,7 @@ def worker(pid, queue, model_params):
     #     shutil.rmtree(model_params['logpath'])
     # os.makedirs(model_params['logpath'], exist_ok=True)
 
-    model = VGGLike(model_params, queue)
+    model = VGGLike(pid, queue, model_params)
     tb_logger = pl_loggers.TensorBoardLogger(
         model_params['logdir'],
         name=model_params['logname'],
@@ -73,7 +73,7 @@ def main_parallel(models_params):
 
 def main_debug(model_params):
     model_params = models_params[0]
-    model = VGGLike(model_params, mp.Queue())
+    model = VGGLike(0, mp.Queue(), model_params)
     tb_logger = pl_loggers.TensorBoardLogger(
         model_params['logdir'],
         name=model_params['logname'],
