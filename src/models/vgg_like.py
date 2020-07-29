@@ -32,7 +32,7 @@ def linear_weight_init(x):
         torch.nn.init.zeros_(x.bias)
 
 class VGGLike(pl.LightningModule):
-    def __init__(self, model_params, queue):
+    def __init__(self, model_params):
         super().__init__()
         self.history = {
             'train_loss': [],
@@ -41,7 +41,6 @@ class VGGLike(pl.LightningModule):
         }
 
         self.seed = model_params['seed']
-        self.queue = queue
         self.model_params = model_params
         self.model = None
         self.configure_model()
@@ -227,9 +226,8 @@ class VGGLike(pl.LightningModule):
         self.targets = []
         self.predicts = []
 
-        self.queue.put([self.pid, self.trainer.current_epoch])
-        # if self.trainer.current_epoch%50 == 0:
-        #     print(self.trainer.current_epoch)
+        if self.trainer.current_epoch%50 == 0:
+            print(self.trainer.current_epoch)
 
         for metric in outputs[0]['metrics'].keys():
             metric_values = torch.stack([x['metrics'][metric] for x in outputs])
