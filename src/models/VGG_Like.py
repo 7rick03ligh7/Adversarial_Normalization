@@ -17,8 +17,8 @@ import torchvision.transforms as transforms
 import pytorch_lightning as pl
 from pytorch_lightning.metrics.classification import confusion_matrix
 
-from bn_ln_in_model import BN_LN_IN_VGGLike
-from weight_norm_model import WN_VGGLike
+from src.models.bn_ln_in_model import BN_LN_IN_VGGLike
+from src.models.weight_norm_model import WN_VGGLike
 
 
 def conv2d_weight_init(x):
