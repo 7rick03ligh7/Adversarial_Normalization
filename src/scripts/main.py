@@ -46,7 +46,7 @@ def worker(pid, queue, model_params):
         weights_summary=None,
         progress_bar_refresh_rate=0,
         track_grad_norm=1,
-        gpus=1
+        gpus=[os.environ['CUDA_VISIBLE_DEVICES']]
         )
     trainer.fit(model)
 
@@ -92,7 +92,7 @@ def main_debug(model_params):
         weights_summary=None,
         progress_bar_refresh_rate=0,
         track_grad_norm=1,
-        gpus=1
+        gpus=[os.environ['CUDA_VISIBLE_DEVICES']]
         )
     trainer.fit(model)
 
