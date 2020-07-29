@@ -2,6 +2,7 @@ import os
 import sys
 import random
 import shutil
+sys.path.append(os.path.sep.join(sys.path[0].split(os.path.sep)[:-2]))
 
 import pandas as pd
 import pytorch_lightning as pl
@@ -9,7 +10,7 @@ from pytorch_lightning import loggers as pl_loggers
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint
 
-from src.models.vgg_Like import VGGLike
+from src.models.vgg_like import VGGLike
 import multiprocessing as mp
 import argparse
 import json
@@ -45,7 +46,7 @@ def worker(pid, queue, model_params):
         weights_summary=None,
         progress_bar_refresh_rate=0,
         track_grad_norm=1,
-        gpus=[os.environ['CUDA_VISIBLE_DEVICES']]
+        gpus=1
         )
     trainer.fit(model)
 
@@ -68,6 +69,7 @@ def main_parallel(models_params):
 
 def main_debug(model_params):
     model_params = models_params[0]
+    model = VGGLike(model_params)
     tb_logger = pl_loggers.TensorBoardLogger(
         model_params['logdir'],
         name=model_params['logname'],
@@ -90,7 +92,7 @@ def main_debug(model_params):
         weights_summary=None,
         progress_bar_refresh_rate=0,
         track_grad_norm=1,
-        gpus=[os.environ['CUDA_VISIBLE_DEVICES']]
+        gpus=1
         )
     trainer.fit(model)
 
@@ -103,7 +105,7 @@ if __name__ == '__main__':
     parser.add_argument('--params_file', type=str, required=True)
     parser.add_argument('--epochs', type=int, required=True)
     parser.add_argument('--seed', type=int, default=42, required=False)
-    parser.add_argument('--debug', type=bool, default=False)
+    parser.add_argument('-debug', type=bool, default=False, const=True, nargs='?')
     arguments = parser.parse_args()
 
     with open(arguments.params_file, 'r') as f:
@@ -123,14 +125,17 @@ if __name__ == '__main__':
             'truck'
         ]
         logname = generate_logname(model_params)
-        logpath = './' + model_params['logdir'] + '/' + logname
+        logpath = './' + arguments.logdir + '/' + logname
+        model_params['logdir'] = arguments.logdir
         model_params['logname'] = logname
         model_params['logpath'] = logpath
         model_params['seed'] = arguments.seed
         model_params['epochs'] = arguments.epochs
 
     if arguments.debug:
-        main
+        print('DEBUUUUUUUUUUUUUUUUUUUG!!!!!!!')
+        main_debug(models_params)
     else:
-        main(models_params)
+        print('PARALLLLLEEEEEEEEEEEEEEL!!!!!!')
+        main_parallel(models_params)
 
