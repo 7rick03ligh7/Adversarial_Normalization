@@ -3,6 +3,5 @@
 /*logs_test
 /data
 /docs
-/.ipynb*
+.ipynb*
 *.pyc
-*.ipynb
