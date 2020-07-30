@@ -8,31 +8,7 @@
         "input_shape": [3, 32, 32],
         "weight_decay": 0.005,
         "elu_alpha": 1,
-        "batch_size": 128,
-        "seed": 42
-    },
-    {
-        "filters": [32, 48, 80, 112, 176, 240],
-        "pool_positions": [2, 5],
-        "regulz_type": "BatchNorm",
-        "pool_factor": 2,
-        "classes_nb": 10,
-        "input_shape": [3, 32, 32],
-        "weight_decay": 0.005,
-        "elu_alpha": 1,
-        "batch_size": 64,
-        "seed": 42
-    },
-    {
-        "filters": [32, 48, 80, 112, 176, 240],
-        "pool_positions": [2, 5],
-        "regulz_type": "BatchNorm",
-        "pool_factor": 2,
-        "classes_nb": 10,
-        "input_shape": [3, 32, 32],
-        "weight_decay": 0.005,
-        "elu_alpha": 1,
-        "batch_size": 192,
+        "batch_size": 256,
         "seed": 42
     },
     {
@@ -44,7 +20,7 @@
         "input_shape": [3, 32, 32],
         "weight_decay": 0.005,
         "elu_alpha": 1,
-        "batch_size": 128,
+        "batch_size": 256,
         "seed": 42
     },
     {
@@ -56,7 +32,7 @@
         "input_shape": [3, 32, 32],
         "weight_decay": 0.005,
         "elu_alpha": 1,
-        "batch_size": 128,
+        "batch_size": 256,
         "seed": 42
     },
     {
@@ -68,7 +44,7 @@
         "input_shape": [3, 32, 32],
         "weight_decay": 0.005,
         "elu_alpha": 1,
-        "batch_size": 128,
+        "batch_size": 256,
         "seed": 42
     },
     {
@@ -80,7 +56,7 @@
         "input_shape": [3, 32, 32],
         "weight_decay": 0.005,
         "elu_alpha": 1,
-        "batch_size": 128,
+        "batch_size": 256,
         "seed": 42
     }
 ]
