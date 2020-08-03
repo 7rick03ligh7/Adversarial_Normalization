@@ -1,0 +1,1 @@
+python ./src/models/scripts/main.py --logdir='logs' --params_file='models_params.json' --epochs=100 -debug
