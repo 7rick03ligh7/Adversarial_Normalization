@@ -1,20 +1,18 @@
 import os
 import sys
-import random
 import shutil
 sys.path.append(os.path.sep.join(sys.path[0].split(os.path.sep)[:-2]))
 
 import pandas as pd
-import pytorch_lightning as pl
 from pytorch_lightning import loggers as pl_loggers
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint
 
-from src.models.vgg_like import VGGLike
+from src.pl_models.vgg_like import VGGLike
 import multiprocessing as mp
 import argparse
 import json
-from src.utils.generates import *
+from src.utils.utils import generate_logname
 from tqdm import tqdm
 
 
@@ -38,6 +36,13 @@ def worker(pid, queue, model_params):
         mode='max',
         prefix=''
     )
+
+    if 'CUDA_VISIBLE_DEVICES' in os.environ.keys():
+        gpus = os.environ['CUDA_VISIBLE_DEVICES']
+    else:
+        gpus = 1
+        print('!!!!!!!! WARNING WARNING WARNING WARNING !!!!!!!!')
+        print('!!!!!!!! CUDA_VISIBLE_DEVICES IS NOT EXIST !!!!!!!!')
     trainer = Trainer(
         logger=tb_logger,
         checkpoint_callback=checkpoint_callback,
@@ -46,7 +51,7 @@ def worker(pid, queue, model_params):
         weights_summary=None,
         progress_bar_refresh_rate=0,
         track_grad_norm=1,
-        gpus=[os.environ['CUDA_VISIBLE_DEVICES']]
+        gpus=gpus
         )
     trainer.fit(model)
 
@@ -67,7 +72,7 @@ def main_parallel(models_params):
     while any([proc.is_alive() for proc in processes]):
         pid, status = progress_queue.get()
         if status:
-            progress_bars[pid].update()
+            progress_bars[pid].update(1)
         if status == 9:
             processes[pid].join()
 

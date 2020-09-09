@@ -8,10 +8,23 @@ class WN_VGGLike(nn.Module):
         block_idx = 0
         self.conv = nn.Sequential()
         prev_filt_size = model_params['input_shape'][0]
-        for filt_size in model_params['filters']:
-            self.conv.add_module(
-                f'conv_{block_idx}',
-                nn.utils.weight_norm(
+        for i, filt_size in enumerate(model_params['filters']):
+            if i < 4:
+                self.conv.add_module(
+                    f'conv_{block_idx}',
+                    nn.utils.weight_norm(
+                        nn.Conv2d(
+                            prev_filt_size,
+                            filt_size,
+                            kernel_size=(3, 3),
+                            padding=(0, 0),
+                            stride=(1, 1)
+                            )
+                        )
+                    )
+            else:
+                self.conv.add_module(
+                    f'conv_{block_idx}',
                     nn.Conv2d(
                         prev_filt_size,
                         filt_size,
@@ -20,7 +33,6 @@ class WN_VGGLike(nn.Module):
                         stride=(1, 1)
                         )
                     )
-                )
             self.conv.add_module(f'actv_{block_idx}', nn.ELU(model_params['elu_alpha']))
             block_idx += 1
             if pool_idx < len(model_params['pool_positions']):
@@ -39,7 +51,7 @@ class WN_VGGLike(nn.Module):
             nn.utils.weight_norm(nn.Linear(model_params['filters'][-1], model_params['filters'][-1]))
             )
         self.head.add_module(
-            'lin_elu',
+            'lin_actv',
             nn.ELU(model_params['elu_alpha'])
             )
         self.head.add_module(

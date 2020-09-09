@@ -1,6 +1,6 @@
 [
     {
-        "filters": [32, 48, 80, 112, 176, 240],
+        "filters": [4, 6, 10, 14, 22, 30],
         "pool_positions": [2, 5],
         "regulz_type": "BatchNorm",
         "pool_factor": 2,
@@ -8,11 +8,11 @@
         "input_shape": [3, 32, 32],
         "weight_decay": 0.005,
         "elu_alpha": 1,
-        "batch_size": 256,
+        "batch_size": 4,
         "seed": 42
     },
     {
-        "filters": [32, 48, 80, 112, 176, 240],
+        "filters": [4, 6, 10, 14, 22, 30],
         "pool_positions": [2, 5],
         "regulz_type": "LayerNorm",
         "pool_factor": 2,
@@ -20,11 +20,11 @@
         "input_shape": [3, 32, 32],
         "weight_decay": 0.005,
         "elu_alpha": 1,
-        "batch_size": 256,
+        "batch_size": 4,
         "seed": 42
     },
     {
-        "filters": [32, 48, 80, 112, 176, 240],
+        "filters": [4, 6, 10, 14, 22, 30],
         "pool_positions": [2, 5],
         "regulz_type": "SpLayerNorm",
         "pool_factor": 2,
@@ -32,11 +32,11 @@
         "input_shape": [3, 32, 32],
         "weight_decay": 0.005,
         "elu_alpha": 1,
-        "batch_size": 256,
+        "batch_size": 4,
         "seed": 42
     },
     {
-        "filters": [32, 48, 80, 112, 176, 240],
+        "filters": [4, 6, 10, 14, 22, 30],
         "pool_positions": [2, 5],
         "regulz_type": "WeightNorm",
         "pool_factor": 2,
@@ -44,11 +44,11 @@
         "input_shape": [3, 32, 32],
         "weight_decay": 0.005,
         "elu_alpha": 1,
-        "batch_size": 256,
+        "batch_size": 4,
         "seed": 42
     },
     {
-        "filters": [32, 48, 80, 112, 176, 240],
+        "filters": [4, 6, 10, 14, 22, 30],
         "pool_positions": [2, 5],
         "regulz_type": "InstanceNorm",
         "pool_factor": 2,
@@ -56,7 +56,7 @@
         "input_shape": [3, 32, 32],
         "weight_decay": 0.005,
         "elu_alpha": 1,
-        "batch_size": 256,
+        "batch_size": 4,
         "seed": 42
     }
 ]
