@@ -14,6 +14,10 @@ import argparse
 import json
 from src.utils.utils import generate_logname
 from tqdm import tqdm
+import time
+
+import logging
+logging.getLogger('lightning').setLevel(0)
 
 
 def worker(pid, queue, model_params):
@@ -64,10 +68,13 @@ def main_parallel(models_params):
     processes = []
     progress_queue = mp.Queue()
     for i, model_params in enumerate(models_params):
-        progress_bars.append(tqdm(total=model_params['epochs']))
         proc = mp.Process(target=worker, args=(i, progress_queue, model_params,))
         processes.append(proc)
         proc.start()
+
+    time.sleep(5)       # crutch for printing progress bar after all debug printings
+    for i, _ in enumerate(models_params):
+        progress_bars.append(tqdm(total=model_params['epochs']))
 
     while any([proc.is_alive() for proc in processes]):
         pid, status = progress_queue.get()
