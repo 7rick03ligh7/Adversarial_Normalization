@@ -9,6 +9,7 @@ from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint
 
 from src.pl_models.vgg_like import VGGLike
+from src.pl_models.vgg_like_adversarial import VGGLike_Adversarial
 import multiprocessing as mp
 import argparse
 import json
@@ -25,7 +26,10 @@ def worker(pid, queue, model_params):
     #     shutil.rmtree(model_params['logpath'])
     # os.makedirs(model_params['logpath'], exist_ok=True)
 
-    model = VGGLike(pid, queue, model_params)
+    if model_params['adversarial']:
+        model = VGGLike_Adversarial(0, mp.Queue(), model_params)
+    else:
+        model = VGGLike(pid, queue, model_params)
     tb_logger = pl_loggers.TensorBoardLogger(
         model_params['logdir'],
         name=model_params['logname'],
@@ -85,7 +89,10 @@ def main_parallel(models_params):
 
 def main_debug(model_params):
     model_params = models_params[0]
-    model = VGGLike(0, mp.Queue(), model_params)
+    if model_params['adversarial']:
+        model = VGGLike_Adversarial(0, mp.Queue(), model_params)
+    else:
+        model = VGGLike(0, mp.Queue(), model_params)
     tb_logger = pl_loggers.TensorBoardLogger(
         model_params['logdir'],
         name=model_params['logname'],
@@ -108,7 +115,9 @@ def main_debug(model_params):
         weights_summary=None,
         progress_bar_refresh_rate=0,
         track_grad_norm=1,
-        gpus=1
+        gpus=1,
+        # val_percent_check=0.1,
+        train_percent_check=0.5
         )
     trainer.fit(model)
 
@@ -120,6 +129,7 @@ if __name__ == '__main__':
     parser.add_argument('--logdir', type=str, required=True)
     parser.add_argument('--params_file', type=str, required=True)
     parser.add_argument('--epochs', type=int, required=True)
+    parser.add_argument('-adversarial', type=bool, default=False, const=True, nargs='?')
     parser.add_argument('-debug', type=bool, default=False, const=True, nargs='?')
     arguments = parser.parse_args()
 
@@ -145,6 +155,7 @@ if __name__ == '__main__':
         model_params['logname'] = logname
         model_params['logpath'] = logpath
         model_params['epochs'] = arguments.epochs
+        model_params['adversarial'] = arguments.adversarial
 
     if arguments.debug:
         print('DEBUUUUUUUUUUUUUUUUUUUG!!!!!!!')
