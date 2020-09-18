@@ -66,6 +66,18 @@ def linear_weight_init(x):
         torch.nn.init.xavier_normal_(x.weight)
         torch.nn.init.zeros_(x.bias)
 
+def sn_weight_init(m):
+    if isinstance(m, nn.Conv2d):
+        n = m.in_channels * m.kernel_size[0] * m.kernel_size[1]
+        m.weight.data.normal_(0, np.sqrt(1. /n))
+        if hasattr(m.bias, 'data'):
+            m.bias.data.zero_()
+    if isinstance(m, nn.Linear):
+        n = m.in_features * m.out_features
+        m.weight.data.normal_(0, np.sqrt(1. /n))
+        if hasattr(m.bias, 'data'):
+            m.bias.data.zero_()
+
 def generate_filters(conv_layers_nb, filters_base, begin_factor=2):
     filters = [begin_factor*filters_base]
     interv = 2
@@ -94,6 +106,8 @@ def generate_logname(model_params):
         rname = 'LN_'
     if model_params['regulz_type'] == 'SpLayerNorm':
         rname = 'SLN_'
+    if model_params['regulz_type'] == 'SelfNorm':
+        rname = 'SN_'
     if model_params['regulz_type'] == 'AdversarialNorm':
         rname = 'AN-'
         if model_params['advers_type'] == 'Layer':

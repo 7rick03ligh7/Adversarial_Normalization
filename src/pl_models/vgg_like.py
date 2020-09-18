@@ -11,10 +11,12 @@ import torchvision.transforms as transforms
 import pytorch_lightning as pl
 
 from src.models.bn_ln_in_model import BN_LN_IN_VGGLike
-from src.models.weight_norm_model import WN_VGGLike
+from src.models.wn_model import WN_VGGLike
+from src.models.sn_model import SN_VGGLike, SN_simple
 
 from src.utils.utils import (calc_confusion_mtx, visualize_confustion_matrix,
-                             save_model, set_seeds, conv2d_weight_init, linear_weight_init)
+                             save_model, set_seeds, conv2d_weight_init, 
+                             linear_weight_init, sn_weight_init)
 
 class VGGLike(pl.LightningModule):
     def __init__(self, pid, queue, model_params):
@@ -30,8 +32,15 @@ class VGGLike(pl.LightningModule):
         self.model_params = model_params
         self.model = None
         self.configure_model()
-        self.transform = transforms.Compose([
-            transforms.ToTensor()])
+
+        if model_params['regulz_type'] == 'SelfNorm':
+            self.transform = transforms.Compose([
+                transforms.ToTensor(),
+                transforms.Normalize(0,1)
+            ])
+        else:
+            self.transform = transforms.Compose([
+                transforms.ToTensor()])
 
         self.targets = []
         self.predicts = []
@@ -47,6 +56,8 @@ class VGGLike(pl.LightningModule):
 
 
     def configure_model(self):
+        set_seeds(self.model_params['seed'])
+
         if self.model_params['regulz_type'] in (
                 'BatchNorm',
                 'LayerNorm',
@@ -55,12 +66,29 @@ class VGGLike(pl.LightningModule):
                 'None'
             ):
             self.model = BN_LN_IN_VGGLike(self.model_params)
+            self.model.apply(conv2d_weight_init)
+            self.model.apply(linear_weight_init)
+
         if self.model_params['regulz_type'] == 'WeightNorm':
             self.model = WN_VGGLike(self.model_params)
+            self.model.apply(conv2d_weight_init)
+            self.model.apply(linear_weight_init)
 
-        set_seeds(self.model_params['seed'])
-        self.model.apply(conv2d_weight_init)
-        self.model.apply(linear_weight_init)
+        if self.model_params['regulz_type'] == 'SelfNorm':
+            self.model = SN_VGGLike(self.model_params)
+            self.model.apply(conv2d_weight_init)
+            self.model.apply(linear_weight_init)   
+
+            # reinitialize selu activation conv weight
+            for name, module in self.model.conv.named_children():
+                if name == 'conv_1':
+                    module.apply(sn_weight_init)
+                if name == 'conv_2':
+                    module.apply(sn_weight_init)
+                if name == 'conv_3':
+                    module.apply(sn_weight_init)
+                if name == 'conv_4':
+                    module.apply(sn_weight_init)
 
     def forward(self, x):
         return self.model(x)

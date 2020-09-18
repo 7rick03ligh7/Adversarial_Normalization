@@ -1,2 +1,4 @@
 #!/bin/bash
 python -W ignore ./src/scripts/main.py --logdir=logs_test --params_file=models_params.json --epochs=10 -debug -adversarial
+
+python -W ignore ./src/scripts/main.py --logdir=logs_test --params_file=models_params.json --epochs=1 -debug -debug_sn

@@ -127,8 +127,10 @@ def main_debug(model_params):
     pd.DataFrame(model.history['train_loss'], columns=['train_loss']).to_csv(model_params['logpath']+'/train_loss.csv', index=False)
     pd.DataFrame(model.history['train']).to_csv(model_params['logpath']+'/train.csv', index=False)
     pd.DataFrame(model.history['val']).to_csv(model_params['logpath']+'/val.csv', index=False)
-    pd.DataFrame(model.adv_history['generator_loss']).to_csv(model_params['logpath']+'/generator_loss.csv', index=False)
-    pd.DataFrame(model.adv_history['adversarial_loss']).to_csv(model_params['logpath']+'/adversarial_loss.csv', index=False)
+
+    if model_params['adversarial']:
+        pd.DataFrame(model.adv_history['generator_loss']).to_csv(model_params['logpath']+'/generator_loss.csv', index=False)
+        pd.DataFrame(model.adv_history['adversarial_loss']).to_csv(model_params['logpath']+'/adversarial_loss.csv', index=False)
 
 
 if __name__ == '__main__':
@@ -140,6 +142,7 @@ if __name__ == '__main__':
     parser.add_argument('--epochs', type=int, required=True)
     parser.add_argument('-adversarial', type=bool, default=False, const=True, nargs='?')
     parser.add_argument('-debug', type=bool, default=False, const=True, nargs='?')
+    parser.add_argument('-debug_sn', type=bool, default=False, const=True, nargs='?')
     arguments = parser.parse_args()
 
     with open(arguments.params_file, 'r') as f:
@@ -165,6 +168,7 @@ if __name__ == '__main__':
         model_params['logpath'] = logpath
         model_params['epochs'] = arguments.epochs
         model_params['adversarial'] = arguments.adversarial
+        model_params['debug_sn'] = arguments.debug_sn
 
     if arguments.debug:
         print('DEBUUUUUUUUUUUUUUUUUUUG!!!!!!!')

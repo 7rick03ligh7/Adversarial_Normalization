@@ -50,9 +50,9 @@ class VGGLike_Adversarial(pl.LightningModule):
 
 
     def configure_model(self):
-        self.model = Adversarial_VGGLike(self.model_params)
-
         set_seeds(self.model_params['seed'])
+        
+        self.model = Adversarial_VGGLike(self.model_params)
         self.model.conv1.apply(conv2d_weight_init)
         self.model.conv2.apply(conv2d_weight_init)
         self.model.conv3.apply(conv2d_weight_init)
