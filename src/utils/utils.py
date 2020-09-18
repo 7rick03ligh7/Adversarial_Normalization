@@ -2,6 +2,9 @@ import os
 import random
 import torch
 import torch.nn as nn
+from torch import Tensor
+from torch.autograd import Variable
+from torch import autograd
 from pytorch_lightning.metrics.classification import confusion_matrix
 import matplotlib.pyplot as plt
 import seaborn as sns

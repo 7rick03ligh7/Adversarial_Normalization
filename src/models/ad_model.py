@@ -11,9 +11,9 @@ class AdversarialNorm2d(nn.Module):
 
         self.clf = nn.Sequential()
         self.clf.add_module('conv1', nn.Conv2d(self.f_num, model_params['advers_f_num'], 3))
-        self.clf.add_module('conv1_act', nn.ReLU())
+        self.clf.add_module('conv1_act', nn.LeakyReLU(0.1, inplace=True))
         self.clf.add_module('conv2', nn.Conv2d(model_params['advers_f_num'], model_params['advers_f_num'], 3))
-        self.clf.add_module('conv2_act', nn.ReLU())
+        self.clf.add_module('conv2_act', nn.LeakyReLU(0.1, inplace=True))
         self.clf.add_module('pool', nn.AdaptiveAvgPool2d(1))
         self.head = nn.Linear(model_params['advers_f_num'], 1)
         
@@ -56,12 +56,13 @@ class Adversarial_VGGLike(nn.Module):
             )
     
     
-    def forward(self, x, typeof_forward=0):
+    def forward(self, x, typeof_forward=0, d_count=None):
         """
             typeof_forward (int):
                 0 - forward without adversarial (usefull for validation model)
-                1 - forward only adversarial (usefull for discriminator)
-                2 - forward everything (usefull for G and D training both)
+                1 - forward only generator
+                2 - forward only adversarial
+                3 - forward everything
             
         """
 
@@ -78,28 +79,43 @@ class Adversarial_VGGLike(nn.Module):
             x = self.clf(x)
             
             return x
-        
+
         elif typeof_forward == 1:
             x = self.conv1(x)
-            z1 = self.adv_norm1(x)
-            x = F.elu(x, alpha=self.elu_alpha)
+            x1 = F.elu(x, alpha=self.elu_alpha)
 
-            x = self.conv2(x)
-            z2 = self.adv_norm2(x)
-            x = F.elu(x, alpha=self.elu_alpha)
+            x = self.conv2(x1)
+            x2 = F.elu(x, alpha=self.elu_alpha)
 
-            x = F.max_pool2d(x, 2)
+            x = F.max_pool2d(x2, 2)
 
             x = self.conv3(x)
-            z3 = self.adv_norm3(x)
-            x = F.elu(x, alpha=self.elu_alpha)
+            x3 = F.elu(x, alpha=self.elu_alpha)
 
-            x = self.conv4(x)
-            z4 = self.adv_norm4(x)
+            x = self.conv4(x3)
+            x4 = F.elu(x, alpha=self.elu_alpha)  
+
+            return [x1, x2, x3, x4]
+        
+        elif typeof_forward == 2:
+            x1, x2, x3, x4 = x
+
+            z1 = self.adv_norm1(x1)
+            if d_count == 1:
+                return z1
+            z2 = self.adv_norm2(x2)
+            if d_count == 2:
+                return z2
+            z3 = self.adv_norm3(x3)
+            if d_count == 3:
+                return z3
+            z4 = self.adv_norm4(x4)
+            if d_count == 4:
+                return z4
             
             return [z1, z2, z3, z4]
-            
-        elif typeof_forward == 2:
+
+        elif typeof_forward == 3:
             x = self.conv1(x)
             z1 = self.adv_norm1(x)
             x = F.elu(x, alpha=self.elu_alpha)

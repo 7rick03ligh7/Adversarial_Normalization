@@ -20,6 +20,9 @@ import time
 import logging
 logging.getLogger('lightning').setLevel(0)
 
+import warnings
+warnings.filterwarnings('ignore')
+
 
 def worker(pid, queue, model_params):
     # if os.path.exists(model_params['logpath']):
@@ -117,9 +120,15 @@ def main_debug(model_params):
         track_grad_norm=1,
         gpus=1,
         # val_percent_check=0.1,
-        train_percent_check=0.5
+        # train_percent_check=0.5
         )
     trainer.fit(model)
+
+    pd.DataFrame(model.history['train_loss'], columns=['train_loss']).to_csv(model_params['logpath']+'/train_loss.csv', index=False)
+    pd.DataFrame(model.history['train']).to_csv(model_params['logpath']+'/train.csv', index=False)
+    pd.DataFrame(model.history['val']).to_csv(model_params['logpath']+'/val.csv', index=False)
+    pd.DataFrame(model.adv_history['generator_loss']).to_csv(model_params['logpath']+'/generator_loss.csv', index=False)
+    pd.DataFrame(model.adv_history['adversarial_loss']).to_csv(model_params['logpath']+'/adversarial_loss.csv', index=False)
 
 
 if __name__ == '__main__':
