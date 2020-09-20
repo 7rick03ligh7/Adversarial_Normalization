@@ -1,21 +1,6 @@
 import torch.nn as nn
 import torch.functional as F
 
-class SN_simple(nn.Module):
-    def __init__(self, model_params):
-        super().__init__()
-
-        self.clf = nn.Sequential()
-        self.clf.add_module('lin1', nn.Linear(3072, 1024))
-        self.clf.add_module('actv1', nn.SELU())
-        self.clf.add_module('lin2', nn.Linear(1024, 1024))
-        self.clf.add_module('actv2', nn.SELU())
-        self.clf.add_module('lin3', nn.Linear(1024, 10))
-
-    def forward(self, x):
-        x = x.view(x.shape[0], -1)
-        return self.clf(x)
-
 
 class SN_VGGLike(nn.Module):
     def __init__(self, model_params):

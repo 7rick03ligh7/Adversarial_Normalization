@@ -56,15 +56,15 @@ def set_seeds(seed):
     np.random.seed((seed+2)*3)
     random.seed((seed+3)*4)
 
-def conv2d_weight_init(x):
-    if isinstance(x, nn.Conv2d):
-        torch.nn.init.xavier_normal_(x.weight)
-        torch.nn.init.zeros_(x.bias)
+def conv2d_weight_init(m):
+    if isinstance(m, nn.Conv2d):
+        torch.nn.init.xavier_normal_(m.weight)
+        torch.nn.init.zeros_(m.bias)
 
-def linear_weight_init(x):
-    if isinstance(x, nn.Linear):
-        torch.nn.init.xavier_normal_(x.weight)
-        torch.nn.init.zeros_(x.bias)
+def linear_weight_init(m):
+    if isinstance(m, nn.Linear):
+        torch.nn.init.xavier_normal_(m.weight)
+        torch.nn.init.zeros_(m.bias)
 
 def sn_weight_init(m):
     if isinstance(m, nn.Conv2d):

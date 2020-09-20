@@ -84,10 +84,11 @@ def main_parallel(models_params):
         progress_bars.append(tqdm(total=model_params['epochs']))
 
     while any([proc.is_alive() for proc in processes]):
+        time.sleep(1)
         pid, status = progress_queue.get()
-        if status:
+        if status > -1:
             progress_bars[pid].update(1)
-        if status == 9:
+        if status == model_params['epochs']-1:
             processes[pid].join()
 
 def main_debug(model_params):

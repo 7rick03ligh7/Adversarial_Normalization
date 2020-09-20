@@ -12,7 +12,7 @@ import pytorch_lightning as pl
 
 from src.models.bn_ln_in_model import BN_LN_IN_VGGLike
 from src.models.wn_model import WN_VGGLike
-from src.models.sn_model import SN_VGGLike, SN_simple
+from src.models.sn_model import SN_VGGLike
 
 from src.utils.utils import (calc_confusion_mtx, visualize_confustion_matrix,
                              save_model, set_seeds, conv2d_weight_init, 
@@ -79,16 +79,11 @@ class VGGLike(pl.LightningModule):
             self.model.apply(conv2d_weight_init)
             self.model.apply(linear_weight_init)   
 
-            # reinitialize selu activation conv weight
-            for name, module in self.model.conv.named_children():
-                if name == 'conv_1':
-                    module.apply(sn_weight_init)
-                if name == 'conv_2':
-                    module.apply(sn_weight_init)
-                if name == 'conv_3':
-                    module.apply(sn_weight_init)
-                if name == 'conv_4':
-                    module.apply(sn_weight_init)
+            # reinitialize conv layer weights with selu activation
+            self.model.conv.conv_0.apply(sn_weight_init)
+            self.model.conv.conv_1.apply(sn_weight_init)
+            self.model.conv.conv_3.apply(sn_weight_init)
+            self.model.conv.conv_4.apply(sn_weight_init)
 
     def forward(self, x):
         return self.model(x)
@@ -133,6 +128,14 @@ class VGGLike(pl.LightningModule):
             lr=5e-4,
             weight_decay=self.model_params['weight_decay']
         )
+
+        # return optim.Adam([
+        #     {'params': self.model.conv.conv_0.parameters(), 'weight_decay': 0},
+        #     {'params': self.model.conv.conv_1.parameters(), 'weight_decay': 0},
+        #     {'params': self.model.conv.conv_3.parameters(), 'weight_decay': 0},
+        #     {'params': self.model.conv.conv_4.parameters(), 'weight_decay': 0},
+        # ], lr=5e-4, weight_decay=self.model_params['weight_decay']
+        # )
 
     def training_step(self, batch, batch_idx):
         image, target = batch
@@ -190,7 +193,7 @@ class VGGLike(pl.LightningModule):
         self.targets = []
         self.predicts = []
 
-        
+        # print(f'pid={self.pid}, epoch={self.current_epoch}')
         self.queue.put([self.pid, self.trainer.current_epoch])
         # if self.trainer.current_epoch%50 == 0:
         #     print(self.trainer.current_epoch)
